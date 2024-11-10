@@ -1,0 +1,34 @@
+"company_id","company_name","city","state","state_name","position_count"
+15324,"GOOGLE","Mountain View","CA","California",54923
+15324,"GOOGLE","Sunnyvale","CA","California",21792
+15324,"GOOGLE","New York","NY","New York",13226
+15324,"GOOGLE","San Francisco","CA","California",6001
+15324,"GOOGLE","Seattle","WA","Washington",5953
+54445,"META PLATFORMS, INC.","West Menlo Park","CA","California",10014
+54445,"META PLATFORMS, INC.","Seattle","WA","Washington",2503
+54445,"META PLATFORMS, INC.","New York","NY","New York",2473
+54445,"META PLATFORMS, INC.","Bellevue","WA","Washington",1803
+54445,"META PLATFORMS, INC.","Hillsborough","CA","California",1172
+56589,"TESLA","Fremont","CA","California",10077
+56589,"TESLA","Palo Alto","CA","California",6154
+56589,"TESLA","Austin","TX","Texas",4274
+56589,"TESLA","Sparks","NV","Nevada",2122
+56589,"TESLA","Lathrop","CA","California",652
+77375,"APPLE","Cupertino","CA","California",174367
+77375,"APPLE","Austin","TX","Texas",52797
+77375,"APPLE","Rollingwood","TX","Texas",12583
+77375,"APPLE","Sunnyvale","CA","California",9071
+77375,"APPLE","San Diego","CA","California",3218
+78788,"NVIDIA","Santa Clara","CA","California",130021
+78788,"NVIDIA","Austin","TX","Texas",10869
+78788,"NVIDIA","Redmond","WA","Washington",4498
+78788,"NVIDIA","Durham","NC","North Carolina",3301
+210552,"AMAZON","Seattle","WA","Washington",301726
+210552,"AMAZON","New York","NY","New York",37465
+210552,"AMAZON","Sunnyvale","CA","California",34999
+210552,"AMAZON","Hunts Point","WA","Washington",34008
+210552,"AMAZON","Austin","TX","Texas",27038
+301499,"MICROSOFT","Redmond","WA","Washington",141589
+301499,"MICROSOFT","Mountain View","CA","California",8608
+301499,"MICROSOFT","Hunts Point","WA","Washington",6713
+301499,"MICROSOFT","Atlanta","GA","Georgia",4080
