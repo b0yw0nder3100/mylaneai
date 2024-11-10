@@ -30,4 +30,3 @@ The **Company Job Distribution Dashboard** is a data-driven web application buil
     This will start the Flask development server at `http://127.0.0.1:5000/`.
 
 4. **Visit the application** by navigating to `http://127.0.0.1:5000/` in your browser.
-s
