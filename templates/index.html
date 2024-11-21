@@ -89,11 +89,9 @@
             value: cities,
         }));
         
-        console.log(stateCityArray)
-
         const jobFamilyChart = echarts.init(document.getElementById('job-family-chart'));
         jobFamilyChart.setOption({
-            title: { text: 'Distribution by Job Family' },
+            title: { text: 'USA Job Distribution by Job Family' },
             tooltip: {},
             xAxis: {
                 type: 'category',
@@ -102,10 +100,11 @@
             yAxis: { type: 'value' },
             series: [{
                 type: 'bar',
+                barWidth: '40%',
                 data: jobFamilyData.map(item => item.count)
             }]
         });
-
+    
         // USA Population Map
         const mainChart = echarts.init(document.getElementById('main-chart'));
         mainChart.showLoading();
@@ -136,7 +135,7 @@
                     title: {
                         text: 'USA Job Distribution by City',
                         subtext: 'Data from MylaneAI',
-                        left: 'right'
+                        left: 'left'
                     },
                     tooltip: {
                         formatter: function (params) {
