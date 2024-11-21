@@ -20,7 +20,7 @@
     <div class="p-6">
         <form method="get" action="/">
             <select name="company" id="company" onchange="this.form.submit()"
-                class="block w-fit px-4 py-2 mt-2 text-gray-700 bg-white border border-gray-300 rounded-lg shadow-sm focus:ring-2 focus:ring-blue-500 focus:outline-none">>
+                class="block w-fit px-4 py-2 mt-2 text-gray-700 bg-white border border-gray-300 rounded-lg shadow-sm focus:ring-2 focus:ring-blue-500 focus:outline-none">
                 {% for company in companies %}
                 <option value="{{ company['company_name']}}" {% if
                     company['company_name']==selected_company['company_name'] %}selected{% endif %}>
@@ -70,31 +70,26 @@
             </div>
         </div>
         <div class="mt-10">
-            <div id="city-distribution-chart" class="chart"></div>
-
+            <div id="main-chart" class="chart"></div>
             <div id="job-family-chart" class="chart"></div>
         </div>
     </div>
+
     <script>
         function toSentenceCase(str) {
             return str.charAt(0).toUpperCase() + str.slice(1).toLowerCase();
         }
 
         // Convert city data from Python to JavaScript
-        const cityData = {{ city_data | tojson }};
+        const cityData = {{ state_city_data | safe }};
         const jobFamilyData = {{ job_family_data | tojson }};
-
-        const cityDistributionChart = echarts.init(document.getElementById('city-distribution-chart'));
-        cityDistributionChart.setOption({
-            title: { text: 'Distribution by City' },
-            tooltip: {},
-            xAxis: { type: 'category', data: cityData.map(item => item.name) },
-            yAxis: { type: 'value' },
-            series: [{
-                type: 'bar',
-                data: cityData.map(item => item.count)
-            }]
-        });
+        
+        const stateCityArray = Object.entries(cityData).map(([state, cities]) => ({
+            name: state,
+            value: cities,
+        }));
+        
+        console.log(stateCityArray)
 
         const jobFamilyChart = echarts.init(document.getElementById('job-family-chart'));
         jobFamilyChart.setOption({
@@ -111,7 +106,83 @@
             }]
         });
 
+        // USA Population Map
+        const mainChart = echarts.init(document.getElementById('main-chart'));
+        mainChart.showLoading();
 
+        fetch('/static/USA.json')
+            .then(response => response.json())
+            .then(usaJson => {
+                mainChart.hideLoading();
+                echarts.registerMap('USA', usaJson, {
+                    Alaska: {
+                        left: -131,
+                        top: 25,
+                        width: 15
+                    },
+                    Hawaii: {
+                        left: -110,
+                        top: 28,
+                        width: 5
+                    },
+                    'Puerto Rico': {
+                        left: -76,
+                        top: 26,
+                        width: 2
+                    }
+                });
+
+                const option = {
+                    title: {
+                        text: 'USA Job Distribution by City',
+                        subtext: 'Data from MylaneAI',
+                        left: 'right'
+                    },
+                    tooltip: {
+                        formatter: function (params) {
+                            if (params.data && Array.isArray(params.data.value)) {
+                                const mappedData = params.data.value
+                                    .map(item => `<li class="text-sm text-gray-700"><strong class="text-blue-600">${item.city}</strong>: ${item.position_count} positions</li>`)
+                                    .join('');
+                        
+                                return `
+                                    <div class="p-3 bg-white border border-gray-200 rounded shadow-lg">
+                                        <p class="text-lg font-bold text-gray-800">${params.data.name}</p>
+                                        <ul class="mt-2 list-disc pl-5">${mappedData}</ul>
+                                    </div>
+                                `;
+                            }
+                            return `
+                                <div class="p-3 bg-white border border-gray-200 rounded shadow-lg">
+                                    <p class="text-lg font-bold text-gray-800">${params.name}</p>
+                                    <p class="text-sm text-gray-600">No data available</p>
+                                </div>
+                            `;
+                        },
+                        trigger: 'item',
+                        showDelay: 0,
+                        transitionDuration: 0.2
+                    },
+                    series: [
+                        {
+                            name: 'USA City Job posts',
+                            type: 'map',
+                            map: 'USA',
+                            emphasis: {
+                                label: {
+                                    show: true
+                                }
+                            },
+                            data: stateCityArray
+                        }
+                    ]
+                };
+                mainChart.setOption(option);
+            })
+            .catch(error => {
+                console.error('Error loading USA.json:', error);
+                mainChart.hideLoading();
+            });
     </script>
 </body>
 

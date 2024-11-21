@@ -1,12 +1,13 @@
 from flask import Flask, render_template, request
 import csv
+from collections import defaultdict
 
 app = Flask(__name__)
 
 def load_company_data():
     companies = []
     with open('company_attributes.csv', mode='r', newline="") as csvfile:
-        reader = csv.DictReader(csvfile,  escapechar='\\', doublequote=True)
+        reader = csv.DictReader(csvfile, escapechar='\\', doublequote=True)
         for row in reader:
             companies.append(row)
     return companies
@@ -33,11 +34,9 @@ def index():
     job_post_data = load_job_post_data()
     job_family_data = load_job_family_data()
 
-
     selected_company_name = request.args.get('company', company_data[0]["company_name"])
   
     selected_company = next((item for item in company_data if item["company_name"] == selected_company_name), None)
-
   
     selected_job_posts = [
         post for post in job_post_data if post["company_name"] == selected_company_name
@@ -46,9 +45,14 @@ def index():
     selected_job_family_posts = [
         post for post in job_family_data if post["company_name"] == selected_company_name
     ]
-    
-    city_data = [{"name": post["city"], "count": int(post["position_count"])} for post in selected_job_posts]
 
+    state_city_data = defaultdict(list)
+    for post in selected_job_posts:
+        state_name = post["state_name"]
+        city = post["city"]
+        position_count = int(post["position_count"])
+        state_city_data[state_name].append({"city": city, "position_count": position_count})
+    
     job_family_data = [{"name": post["job_family"], "count": int(post["position_count"])} for post in selected_job_family_posts]
 
-    return render_template('index.html', companies=company_data, selected_company=selected_company, city_data=city_data, job_family_data=job_family_data)
+    return render_template('index.html', companies=company_data, selected_company=selected_company, state_city_data=dict(state_city_data), job_family_data=job_family_data)
